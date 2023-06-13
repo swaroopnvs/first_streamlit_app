@@ -43,19 +43,22 @@ try:
         streamlit.dataframe(back_from_function)
 except URLError as e:
     streamlit.error()
-#streamlit.stop()
+
 
 streamlit.header('View Our Fruit List -Add Your Favourite')
+
 def get_fruit_load_list():
     with my_cnx.cursor() as mycur:
         my_cur.execute("select * from pc_rivery_db.public.fruit_load_list")
         return my_cur.fetchall()
+    
 if streamlit.button('Get Fruit List'):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     my_data_rows=get_fruit_load_list()
     my_cnx.close()
     streamlit.dataframe(my_data_rows)
-
+    
+streamlit.stop()
 def insert_row_snowflake(new_fruit):
     with my_cnx.cursor() as mycur:
         my_cur.execute("insert into pc_rivery_db.public.fruit_load_list values ('"+new_fruit+"')")
